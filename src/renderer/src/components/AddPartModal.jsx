@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { FiX } from 'react-icons/fi';
 
 const empty = {
   partNumber: '',
@@ -22,6 +23,11 @@ const AddPartModal = ({ open, onClose, onSave, categories, suppliers, t, locale 
     setForm(empty);
   };
 
+  const handleClose = () => {
+    setForm(empty);
+    onClose();
+  };
+
   return (
     <AnimatePresence>
       {open ? (
@@ -29,41 +35,55 @@ const AddPartModal = ({ open, onClose, onSave, categories, suppliers, t, locale 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur"
-          onClick={onClose}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm"
+          onClick={handleClose}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="w-full max-w-lg rounded-md border border-muted bg-background p-6 shadow-card"
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            className="w-full max-w-lg bg-surface rounded-lg shadow-modal border border-border mx-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-4 text-lg font-semibold text-primary">{t(locale, 'inventory.addTitle')}</div>
-            <form onSubmit={submit} className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.partNumber')}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <h2 className="text-base font-semibold text-primary">{t(locale, 'inventory.addTitle')}</h2>
+              <button
+                onClick={handleClose}
+                className="p-1.5 rounded text-muted hover:text-primary hover:bg-slate-100 transition-colors"
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+            <form onSubmit={submit} className="p-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.partNumber')}
+                  </label>
                   <input
                     required
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.partNumber}
                     onChange={(e) => setForm({ ...form, partNumber: e.target.value })}
                   />
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.name')}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.name')}
+                  </label>
                   <input
                     required
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                   />
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.category')}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.category')}
+                  </label>
                   <select
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
                   >
@@ -72,11 +92,13 @@ const AddPartModal = ({ open, onClose, onSave, categories, suppliers, t, locale 
                       <option key={c}>{c}</option>
                     ))}
                   </select>
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.supplier')}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.supplier')}
+                  </label>
                   <select
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.supplier}
                     onChange={(e) => setForm({ ...form, supplier: e.target.value })}
                   >
@@ -87,71 +109,81 @@ const AddPartModal = ({ open, onClose, onSave, categories, suppliers, t, locale 
                       </option>
                     ))}
                   </select>
-                </label>
+                </div>
               </div>
-              <div className="grid grid-cols-3 gap-3">
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.quantity')}
+              <div className="grid grid-cols-3 gap-4 mt-4">
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.quantity')}
+                  </label>
                   <input
                     type="number"
                     min="0"
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.quantity}
                     onChange={(e) => setForm({ ...form, quantity: Number(e.target.value) })}
                   />
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.purchasePrice')}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.purchasePrice')}
+                  </label>
                   <input
                     type="number"
                     min="0"
                     step="0.01"
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.purchasePrice}
                     onChange={(e) => setForm({ ...form, purchasePrice: Number(e.target.value) })}
                   />
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.salePrice')}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.salePrice')}
+                  </label>
                   <input
                     type="number"
                     min="0"
                     step="0.01"
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.salePrice}
                     onChange={(e) => setForm({ ...form, salePrice: Number(e.target.value) })}
                   />
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.threshold')}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.threshold')}
+                  </label>
                   <input
                     type="number"
                     min="0"
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.threshold}
                     onChange={(e) => setForm({ ...form, threshold: Number(e.target.value) })}
                   />
-                </label>
-                <label className="text-sm text-primary/70">
-                  {t(locale, 'inventory.fields.location') || 'Location'}
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-muted mb-1.5">
+                    {t(locale, 'inventory.fields.location') || 'Location'}
+                  </label>
                   <input
-                    className="mt-1 w-full rounded-md border border-muted bg-surface px-3 py-2 focus:border-accent focus:outline-none"
+                    className="input-field"
                     value={form.location}
                     onChange={(e) => setForm({ ...form, location: e.target.value })}
                   />
-                </label>
+                </div>
               </div>
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
                 <button
                   type="button"
-                  onClick={onClose}
-                  className="rounded-md border border-muted bg-white px-3 py-2 text-sm text-primary hover:bg-muted/20"
+                  onClick={handleClose}
+                  className="btn-secondary"
                 >
                   {t(locale, 'inventory.cancel')}
                 </button>
                 <button
                   type="submit"
-                  className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white shadow-card transition hover:scale-[1.02]"
+                  className="btn-primary"
                 >
                   {t(locale, 'inventory.save')}
                 </button>

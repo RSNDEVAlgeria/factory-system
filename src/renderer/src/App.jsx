@@ -39,7 +39,7 @@ const filterParts = (parts, filters) =>
 const Dashboard = ({ parts, locale }) => {
   const lowStock = parts.filter((p) => p.quantity <= (p.threshold ?? 10));
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
       <StatCard label={t(locale, 'dashboard.total')} value={parts.length} icon="📦" />
       <StatCard label={t(locale, 'dashboard.low')} value={lowStock.length} icon="⚠️" alert={lowStock.length > 0} />
       <StatCard label={t(locale, 'dashboard.recentSales')} value="—" icon="🧾" />
@@ -71,12 +71,12 @@ const InventoryPage = ({
   );
   if (view === 'categories') {
     return (
-      <div className="space-y-4">
-        <div className="rounded-md border border-muted bg-surface p-4 shadow-card">
+      <div className="space-y-5">
+        <div className="card p-5">
           <div className="flex flex-wrap items-center gap-3">
             <input
               id="category-input"
-              className="w-64 rounded-md border border-muted bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none"
+              className="input-field w-64"
               placeholder={t(locale, 'inventory.tabs.categories')}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && e.target.value.trim()) {
@@ -87,7 +87,7 @@ const InventoryPage = ({
               }}
             />
             <button
-              className="rounded-md bg-accent px-3 py-2 text-sm font-semibold text-white shadow-card transition hover:scale-[1.02]"
+              className="btn-primary flex items-center gap-2"
               onClick={() => {
                 const input = document.getElementById('category-input');
                 const val = input?.value.trim();
@@ -97,9 +97,9 @@ const InventoryPage = ({
                 }
               }}
             >
-              + {t(locale, 'inventory.tabs.categories')}
+              <FiPlus size={16} /> Add {t(locale, 'inventory.tabs.categories')}
             </button>
-            <div className="text-sm text-primary/70">
+            <div className="text-sm text-muted ml-auto">
               {categories.length} {t(locale, 'inventory.tabs.categories').toLowerCase()}
             </div>
           </div>
@@ -107,15 +107,15 @@ const InventoryPage = ({
             {categories.map((c) => (
               <div
                 key={c}
-                className="flex items-center gap-2 rounded-full border border-accent px-3 py-1 text-sm text-accent hover:bg-accent/10"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-accent/10 text-accent border border-accent/20"
               >
                 <span>{c}</span>
                 <button
-                  className="text-xs text-danger hover:underline"
+                  className="text-xs text-muted hover:text-danger transition-colors"
                   onClick={() => setCategories((prev) => prev.filter((x) => x !== c))}
                   aria-label={`Delete ${c}`}
                 >
-                  ✕
+                  ×
                 </button>
               </div>
             ))}
@@ -170,12 +170,12 @@ const InventoryPage = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 rounded-md bg-surface px-3 py-2 shadow-card">
-          <FiSearch className="text-accent" />
+    <div className="space-y-5">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-2 card px-3 py-2 flex-1 max-w-md">
+          <FiSearch className="text-muted" size={16} />
           <input
-            className="w-64 bg-transparent text-sm focus:outline-none"
+            className="flex-1 bg-transparent text-sm focus:outline-none"
             placeholder={t(locale, 'inventory.search')}
             value={filters.searchInput}
             onChange={(e) =>
@@ -183,9 +183,9 @@ const InventoryPage = ({
             }
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           <select
-            className="rounded-md border border-muted bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none"
+            className="input-field w-40"
             value={filters.category}
             onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value }))}
           >
@@ -195,7 +195,7 @@ const InventoryPage = ({
             ))}
           </select>
           <select
-            className="rounded-md border border-muted bg-background px-3 py-2 text-sm focus:border-accent focus:outline-none"
+            className="input-field w-40"
             value={filters.supplier}
             onChange={(e) => setFilters((f) => ({ ...f, supplier: e.target.value }))}
           >
@@ -206,22 +206,22 @@ const InventoryPage = ({
               </option>
             ))}
           </select>
-          <label className="flex cursor-pointer items-center gap-2 rounded-md border border-muted bg-background px-3 py-2 text-sm">
-            <FiUpload />
-            <span>{t(locale, 'inventory.import')}</span>
+          <label className="btn-secondary flex items-center gap-2 cursor-pointer">
+            <FiUpload size={16} />
+            <span>Import</span>
             <input type="file" accept=".xlsx,.xls" className="hidden" onChange={importExcel} />
           </label>
           <button
             onClick={exportExcel}
-            className="flex items-center gap-2 rounded-md border border-muted bg-background px-3 py-2 text-sm hover:border-accent"
+            className="btn-secondary flex items-center gap-2"
           >
-            <FiDownload /> {t(locale, 'inventory.export')}
+            <FiDownload size={16} /> Export
           </button>
           <button
             onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white shadow-card transition hover:scale-[1.02]"
+            className="btn-primary flex items-center gap-2"
           >
-            <FiPlus /> {t(locale, 'inventory.newPart')}
+            <FiPlus size={16} /> {t(locale, 'inventory.newPart')}
           </button>
         </div>
       </div>
@@ -448,9 +448,9 @@ const AppShell = () => {
             <Route
               path="*"
               element={
-                <motion.div {...fadeIn} className="rounded-md border border-muted bg-surface p-6 shadow-card">
-                  <div className="text-lg font-semibold">Coming soon</div>
-                  <p className="text-sm text-primary/70">
+                <motion.div {...fadeIn} className="card p-6">
+                  <div className="text-base font-semibold text-primary">Coming soon</div>
+                  <p className="text-sm text-muted mt-1">
                     Section not implemented yet. Use Inventory and Dashboard for now.
                   </p>
                 </motion.div>

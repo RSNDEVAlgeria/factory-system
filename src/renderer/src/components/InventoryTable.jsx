@@ -44,7 +44,7 @@ const EditableCell = ({ value, onSave, allowEdit, animationsEnabled = true }) =>
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onBlur={commit}
-              className="w-full rounded border border-accent bg-background px-2 py-1 text-sm focus:outline-none"
+              className="w-full border border-accent rounded px-2 py-1 text-sm bg-white focus:ring-2 focus:ring-accent/20"
             />
           ) : (
             <motion.div
@@ -64,7 +64,7 @@ const EditableCell = ({ value, onSave, allowEdit, animationsEnabled = true }) =>
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commit}
-          className="w-full rounded border border-accent bg-background px-2 py-1 text-sm focus:outline-none"
+          className="w-full border border-accent rounded px-2 py-1 text-sm bg-white focus:ring-2 focus:ring-accent/20"
         />
       ) : (
         <div className="cursor-text">{value}</div>
@@ -89,29 +89,29 @@ const InventoryTable = ({ parts, onEdit, onDelete, t, locale, editingId, setEdit
   );
 
   return (
-    <div className="overflow-hidden rounded-md border border-muted bg-surface shadow-card">
+    <div className="card overflow-hidden">
       <div className="max-h-[520px] overflow-auto">
-        <table className="min-w-full divide-y divide-muted/60 text-sm">
-          <thead className="bg-background text-left text-xs font-semibold uppercase text-primary/70">
-            <tr>
+        <table className="min-w-full text-sm">
+          <thead className="bg-slate-50 text-left text-xs font-semibold uppercase text-muted tracking-wider">
+            <tr className="border-b border-border">
               {columns.map((col) => (
-                <th key={col.key} className="px-4 py-3">
+                <th key={col.key} className={`${isCompact ? 'px-3 py-2.5' : 'px-4 py-3'} whitespace-nowrap`}>
                   {col.label}
                 </th>
               ))}
-              <th className="px-4 py-3 text-right"></th>
+              <th className={`${isCompact ? 'px-3 py-2.5' : 'px-4 py-3'} text-right`}></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-muted/50">
+          <tbody className="divide-y divide-border">
             {parts.map((row, idx) => (
-              <tr key={row.id} className={idx % 2 === 0 ? 'bg-background' : 'bg-surface'}>
+              <tr key={row.id} className="hover:bg-slate-50/50 transition-colors">
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`${isCompact ? 'px-3 py-2' : 'px-4 py-3'} ${
+                    className={`${isCompact ? 'px-3 py-2.5' : 'px-4 py-3'} ${
                       col.key === 'quantity' && row.quantity <= (row.threshold ?? 10)
-                        ? 'bg-red-100 text-red-700 rounded'
-                        : ''
+                        ? 'bg-red-50 text-red-700 font-medium'
+                        : 'text-primary'
                     }`}
                   >
                     <EditableCell
@@ -122,21 +122,21 @@ const InventoryTable = ({ parts, onEdit, onDelete, t, locale, editingId, setEdit
                     />
                   </td>
                 ))}
-                <td className="px-4 py-3">
-                  <div className="flex justify-end gap-2 text-primary/70">
+                <td className={`${isCompact ? 'px-3 py-2.5' : 'px-4 py-3'}`}>
+                  <div className="flex justify-end gap-1">
                     <button
-                      className="rounded border border-accent/30 p-1 text-accent hover:bg-accent/10"
+                      className="p-1.5 rounded text-muted hover:text-accent hover:bg-accent/10 transition-colors"
                       onClick={() => setEditingId(row.id)}
                       title="Edit row"
                     >
-                      <FiEdit2 size={16} />
+                      <FiEdit2 size={15} />
                     </button>
                     <button
-                      className="rounded border border-danger/40 p-1 text-danger hover:bg-danger/10"
+                      className="p-1.5 rounded text-muted hover:text-danger hover:bg-danger/10 transition-colors"
                       onClick={() => onDelete(row)}
                       title="Delete"
                     >
-                      <FiTrash2 size={16} />
+                      <FiTrash2 size={15} />
                     </button>
                   </div>
                 </td>
@@ -144,7 +144,7 @@ const InventoryTable = ({ parts, onEdit, onDelete, t, locale, editingId, setEdit
             ))}
             {parts.length === 0 ? (
               <tr>
-                <td className="px-4 py-6 text-center text-primary/60" colSpan={columns.length + 1}>
+                <td className="px-4 py-8 text-center text-muted" colSpan={columns.length + 1}>
                   {t(locale, 'inventory.noParts')}
                 </td>
               </tr>
